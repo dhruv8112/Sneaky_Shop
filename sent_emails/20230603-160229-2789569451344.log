@@ -1,0 +1,25 @@
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: Password reset on 127.0.0.1:8000
+From: webmaster@localhost
+To: hehic67814@pyadu.com
+Date: Sat, 03 Jun 2023 10:32:29 -0000
+Message-ID: <168578834999.10200.2942349066844610740@LAPTOP-CM8T2OM0>
+
+
+You're receiving this email because you requested a password reset for your user account at 127.0.0.1:8000.
+
+Please go to the following page and choose a new password:
+
+http://127.0.0.1:8000/reset/NA/bp8785-ee3a22b4ae445dacba04f2f8043dd0cc/
+
+Your username, in case you’ve forgotten: pa
+
+Thanks for using our site!
+
+The 127.0.0.1:8000 team
+
+
+
+-------------------------------------------------------------------------------

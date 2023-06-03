@@ -20,7 +20,7 @@ from django.conf import settings
 from django.contrib import admin
 from django.urls import path
 from app1.views import *
-
+from django.contrib.auth.views import PasswordChangeView
 
 
 urlpatterns = [
@@ -28,7 +28,10 @@ urlpatterns = [
     path('', index, name='index'),
     path('register/', register_page, name='register'),
     path('login', login, name='login'),
-    path('contact_us', contact_us, name='contact_us'),    
+    path('contact_us', contact_us, name='contact_us'),
     path('single/<int:pro_id>/', single_product, name='single_product'),
     path('category', category, name='category'),
+    path('cart', add_to_cart, name='cart'), 
+      path('change-password/', custom_password_change, name='change_password'),
+    
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

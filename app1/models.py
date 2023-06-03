@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.html import format_html
+from django.contrib.auth.models import User
 
 # Create your models here.
 class categories(models.Model):
@@ -26,8 +27,6 @@ class products(models.Model):
     price = models.IntegerField()
     img = models.ImageField(upload_to='ProductImage',null=True, blank=True)
     
-    def __str__(self):
-        return self.title
     
 class contact(models.Model):
     
@@ -35,5 +34,15 @@ class contact(models.Model):
     contact_no=models.IntegerField()
     Email=models.CharField(max_length=20)
     subject=models.CharField(max_length=25)
-    message=models.TextField(max_length=200)
+    message=models.TextField(max_length=200) 
     
+
+   
+class Cart(models.Model):
+    product_id=models.IntegerField()
+    quantity=models.IntegerField()
+    total_price=models.IntegerField()
+    cart_product_name=models.CharField(max_length=100,default="Not get Product")
+    
+    def __str__(self):
+        return self.cart_product_name
