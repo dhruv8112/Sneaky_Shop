@@ -115,10 +115,11 @@ def single_product(request, pro_id):
         model = Cart()
         model.product_id = request.POST['id']
         model.quantity = request.POST['quantity']
-        product_data = products.objects.get(pro_id=request.POST['id'])
-        model.total_price = int(product_data.price) * \
+        # product_data = products.objects.get(pro_id=request.POST['id'])
+        model.total_price = int(show_product.price) * \
             int(request.POST['quantity'])
-        model.cart_product_name = products.pro_name
+        model.cart_product_name = show_product.pro_name
+        print(model.cart_product_name)
         # model.cart_product_name = show_product.pro_name.value_from_object(show_product)
         model.save()
         return redirect('cart')
