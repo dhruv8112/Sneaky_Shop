@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth.forms import PasswordChangeForm
 from django.urls import reverse
-from django.contrib.auth.decorators import login_required
+
 from django.contrib.auth import update_session_auth_hash
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
@@ -20,6 +20,30 @@ def index(request):
     return render(request, 'index.html', {'data': data})
 
 
+# def register_page(request):
+#     if request.method == 'POST':
+#         uname = request.POST.get('name')
+#         uemail = request.POST.get('email')
+#         upass = request.POST.get('password')
+#         ucon_password = request.POST.get('confirm_password')
+#         uaddress = request.POST.get('address')
+#         data=user_info(usernmae=uname,email=uemail,password=ucon_password)
+#         data.save()
+
+#         # Check if the user with the same username already exists
+#         if User.objects.filter(username=uname).exists():
+#             # User with the same username already exists
+#             # Handle the appropriate logic (e.g., display an error message)
+#             return HttpResponse('Username already exists')
+
+#         # Create a new user
+#         my_user = User.objects.create_user(uname, uemail, upass)
+#         my_user.save()
+#         # Redirect to the login page after successful registration
+#         return redirect(login)
+
+#     # Render the registration form
+#     return render(request, 'register.html')
 def register_page(request):
     if request.method == 'POST':
         uname = request.POST.get('name')
@@ -35,10 +59,15 @@ def register_page(request):
             return HttpResponse('Username already exists')
 
         # Create a new user
-        my_user = User.objects.create_user(uname, uemail, upass)
+        my_user = User.objects.create_user(username=uname, email=uemail, password=upass)
         my_user.save()
+
+        # Create a user_info instance
+        data = user_info.objects.create(usernmae=uname, gender='M', email=uemail, password=upass)
+        data.save()
+
         # Redirect to the login page after successful registration
-        return redirect(login)
+        return redirect('login')
 
     # Render the registration form
     return render(request, 'register.html')
@@ -117,17 +146,33 @@ def add_to_cart(request):
     return render(request, 'cart.html', {'cart': cart_object_get})
 
 
-def custom_password_change(request):
-    if request.method == 'POST':
-        form = PasswordChangeForm(user=request.user, data=request.POST)
-        if form.is_valid():
-            user = form.save()
-            # Update the session to prevent the user from being logged out
-            update_session_auth_hash(request, user)
-            messages.success(
-                request, 'Your password has been changed successfully.')
-            return redirect(reverse('login'))
-    else:
-        form = PasswordChangeForm(user=request.user)
 
-    return render(request, 'change.html', {'form': form})
+from django.contrib.auth.models import User
+
+def custom_password_change(request):
+    if request.method == "POST":
+        username = request.POST['username']
+        old_password = request.POST['oldpass']
+        new_password = request.POST['newpass']
+        new_password_confirm = request.POST['newpass1']
+        
+        # Check if the user with the provided username exists
+        try:
+            user = User.objects.get(username=username)
+        except User.DoesNotExist:
+            return render(request, 'change.html', {'message': "User not found"})
+
+        # Check if the old password matches the user's current password
+        if user.check_password(old_password):
+            # Check if the new passwords match
+            if new_password == new_password_confirm:
+                # Set the new password
+                user.set_password(new_password)
+                user.save()
+                return render(request, 'change.html', {'message': "Password updated successfully"})
+            else:
+                return render(request, 'change.html', {'message': "New passwords do not match"})
+        else:
+            return render(request, 'change.html', {'message': "Old password is incorrect"})
+
+    return render(request, 'change.html')

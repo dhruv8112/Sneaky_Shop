@@ -18,8 +18,12 @@ class contactRegister(admin.ModelAdmin):
 
 class cartRegister(admin.ModelAdmin):
     list_display = ['product_id','cart_product_name','quantity','total_price']
+    
+class userRegister(admin.ModelAdmin):
+    list_display = ['usernmae','email',]
 
 admin.site.register(categories, CatAdmin)
 admin.site.register(products, ProductAdmin)
 admin.site.register(contact, contactRegister)
 admin.site.register(Cart, cartRegister)
+admin.site.register(user_info, userRegister)
