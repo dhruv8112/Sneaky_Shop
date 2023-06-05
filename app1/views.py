@@ -20,30 +20,6 @@ def index(request):
     return render(request, 'index.html', {'data': data})
 
 
-# def register_page(request):
-#     if request.method == 'POST':
-#         uname = request.POST.get('name')
-#         uemail = request.POST.get('email')
-#         upass = request.POST.get('password')
-#         ucon_password = request.POST.get('confirm_password')
-#         uaddress = request.POST.get('address')
-#         data=user_info(usernmae=uname,email=uemail,password=ucon_password)
-#         data.save()
-
-#         # Check if the user with the same username already exists
-#         if User.objects.filter(username=uname).exists():
-#             # User with the same username already exists
-#             # Handle the appropriate logic (e.g., display an error message)
-#             return HttpResponse('Username already exists')
-
-#         # Create a new user
-#         my_user = User.objects.create_user(uname, uemail, upass)
-#         my_user.save()
-#         # Redirect to the login page after successful registration
-#         return redirect(login)
-
-#     # Render the registration form
-#     return render(request, 'register.html')
 def register_page(request):
     if request.method == 'POST':
         uname = request.POST.get('name')
@@ -59,11 +35,13 @@ def register_page(request):
             return HttpResponse('Username already exists')
 
         # Create a new user
-        my_user = User.objects.create_user(username=uname, email=uemail, password=upass)
+        my_user = User.objects.create_user(
+            username=uname, email=uemail, password=upass)
         my_user.save()
 
         # Create a user_info instance
-        data = user_info.objects.create(usernmae=uname, gender='M', email=uemail, password=upass)
+        data = user_info.objects.create(
+            usernmae=uname, gender='M', email=uemail, password=upass)
         data.save()
 
         # Redirect to the login page after successful registration
@@ -129,17 +107,18 @@ def single_product(request, pro_id):
 
 def category(request):
     category_display = categories.objects.all()
-    # category = categories.objects.get(name=cat_name)
-    # products_get = products.objects.filter(category=category)
-
-    # context = {
-    #     'category': category,
-    #     'products': products_get
-    # }
-
-    # return render(request, 'category.html', context)
 
     return render(request, 'category.html', {'category': category_display})
+
+
+def category_list(request, cat_name):
+    if categories.objects.filter(cat_name=cat_name).exists():
+        cat = categories.objects.get(cat_name=cat_name)
+        products_in_category = products.objects.filter(pro_cat=cat)
+        return render(request, 'category.html', {'products': products_in_category, 'cat': cat})
+    else:
+        # Handle the case when the category does not exist
+        return HttpResponse("Category not found")
 
 
 def add_to_cart(request):
@@ -147,16 +126,13 @@ def add_to_cart(request):
     return render(request, 'cart.html', {'cart': cart_object_get})
 
 
-
-from django.contrib.auth.models import User
-
 def custom_password_change(request):
     if request.method == "POST":
         username = request.POST['username']
         old_password = request.POST['oldpass']
         new_password = request.POST['newpass']
         new_password_confirm = request.POST['newpass1']
-        
+
         # Check if the user with the provided username exists
         try:
             user = User.objects.get(username=username)
