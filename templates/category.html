@@ -124,8 +124,12 @@
 				
 				<div class="sidebar-categories">
 					<div class="head">Browse Categories</div>
+					<h2>{{cat.cat_name}}</h2>
 					<ul class="main-categories">
 						{% for category in category %}
+						
+						
+					
 						
 						<li class="main-nav-list">
 							<a data-toggle="collapse" href="{% url 'category' category.cat_name %}" aria-expanded="false" aria-controls="fruitsVegetable">
