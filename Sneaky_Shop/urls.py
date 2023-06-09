@@ -30,10 +30,14 @@ urlpatterns = [
     path('login', login, name='login'),
     path('contact_us', contact_us, name='contact_us'),
     path('single/<int:pro_id>/', single_product, name='single_product'),
-
+    path('checkout', checkout, name='checkout'),
+    
     path('category/', category, name='category'),
     path('category/<str:cat_name>/', category_list, name='category'),
     path('cart', add_to_cart, name='cart'),
+    path('add_to_cart/', add_to_cart, name='add_to_cart'),
+    path('remove_product/<str:cart_product_name>/',
+         remove_product, name='remove_product'),
     path('change-password/', custom_password_change, name='change_password'),
 
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

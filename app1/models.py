@@ -42,11 +42,13 @@ class contact(models.Model):
 
 
 class Cart(models.Model):
+    cart_id=models.IntegerField(default=1)
     product_id = models.IntegerField()
     quantity = models.IntegerField()
     total_price = models.IntegerField()
     cart_product_name = models.CharField(
         max_length=100, default="Not get Product")
+    cart_img=models.ImageField(upload_to='cart_product',null=True)
 
     def __str__(self):
         return self.cart_product_name
@@ -63,3 +65,20 @@ class user_info(models.Model):
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES)
     email=models.CharField(max_length=50)
     password = models.CharField(max_length=40)
+
+
+
+
+class order_details(models.Model):
+    order_id=models.CharField(max_length=100)
+    user_name=models.CharField(max_length=100)
+    user_email=models.CharField(max_length=100)
+    product_name=models.CharField(max_length=100)
+    total=models.IntegerField()
+    payment_mode=models.CharField(max_length=50)
+    address=models.CharField(max_length=100)
+    pincode=models.CharField(max_length=10)
+    phone_no=models.CharField(max_length=100)
+    country=models.CharField(max_length=10)
+    is_buy=models.BooleanField(default=False)
+    shipping=models.TextField(default="No special shipping")

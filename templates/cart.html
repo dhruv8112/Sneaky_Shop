@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="zxx" class="no-js">
+    {%load static%}
   <head>
     <!-- Mobile Specific Meta -->
     <meta
@@ -7,7 +8,8 @@
       content="width=device-width, initial-scale=1, shrink-to-fit=no"
     />
     <!-- Favicon-->
-    <link rel="shortcut icon" href="img/fav.png" />
+    <link rel="shortcut icon" href="{% static 'image/fav.png' %}" type="image/png">
+
     <!-- Author Meta -->
     <meta name="author" content="CodePixar" />
     <!-- Meta Description -->
@@ -18,7 +20,7 @@
     <meta charset="UTF-8" />
     <!-- Site Title -->
     <title>Karma Shop</title>
-    {%load static%}
+   
 
     <!--
             CSS
@@ -43,7 +45,8 @@
         <nav class="navbar navbar-expand-lg navbar-light main_box">
             <div class="container">
                 <!-- Brand and toggle get grouped for better mobile display -->
-                <a class="navbar-brand logo_h" href="index.html"><img src="img/logo.png" alt=""></a>
+                <a class="navbar-brand logo_h" href="index.html"><img src="{% static 'image/logo.png' %}" alt="">
+                </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
                  aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="icon-bar"></span>
@@ -129,45 +132,51 @@
             <div class="table-responsive">
                 <table class="table">
                     <thead>
+                        
                         <tr>
+                            <th scope="col">Image</th>
                             <th scope="col">Product</th>
-                            <th scope="col">Price</th>
                             <th scope="col">Quantity</th>
+                            <th scope="col">Price </th>
                             <th scope="col">Total</th>
                         </tr>
                     </thead>
+                    {% for cart in cart_items %}
                     <tbody>
                         <tr>
-                            {% for cart in cart %}
+                            
                             <td>
                                 <div class="media">
                                     <div class="d-flex">
-                                        <img src="img/cart.jpg" alt="">
+                                        <img class="img-fluid" src="{{ cart.cart_img.url }}" alt="" />
+
                                     </div>
                                     <div class="media-body">
-                                        <p>{{product_name}}</p>
+                                        <p>{{cart.cart_product_name}}</p>
                                     </div>
                                 </div>
                             </td>
                             <td>
                                 <h5>{{cart.quantity}}</h5>
                             </td>
-                            <td>
-                                <div class="product_count">
-                                    <input type="text" name="qty" id="sst" maxlength="12" value="1" title="Quantity:"
-                                        class="input-text qty">
-                                    <button onclick="var result = document.getElementById('sst'); var sst = result.value; if( !isNaN( sst )) result.value++;return false;"
-                                        class="increase items-count" type="button"><i class="lnr lnr-chevron-up"></i></button>
-                                   
-                                </div>
+                            <td class="<span class="placeholder col-3 placeholder-lg bg-primary"></span
+                               <h5>{{ price_per }}</h5>
                             </td>
                             <td>
                                 <h5>{{cart.total_price}}</h5>
                             </td>
-                            {% endfor %}
+                            <td>
+                                <form method="POST" action="{% url 'remove_product' cart.cart_id %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="primary-btn" style="border: 0;">Remove</button>
+                                </form>
+                                
+                                
+                            </td>
+                           
                         </tr>
                        
-                       
+                        {% endfor %}
                         <tr class="bottom_button">
                            
                             <td>
@@ -195,8 +204,9 @@
                                 <h5>Subtotal</h5>
                             </td>
                             <td>
-                                <h5>$2160.00</h5>
+                                <h5>{{ subtotal }}Rs.</h5>
                             </td>
+                            
                         </tr>
                         <tr class="shipping_area">
                             <td>

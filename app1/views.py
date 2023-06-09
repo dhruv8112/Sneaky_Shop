@@ -97,12 +97,20 @@ def single_product(request, pro_id):
         model.total_price = int(show_product.price) * \
             int(request.POST['quantity'])
         model.cart_product_name = show_product.pro_name
+        model.cart_img=show_product.img
+        
+        last_cart = Cart.objects.last() 
+        last_cart_id = last_cart.cart_id if last_cart else 0
+        model.cart_id = last_cart_id + 1
+
+
         print(model.cart_product_name)
         # model.cart_product_name = show_product.pro_name.value_from_object(show_product)
         model.save()
+
         return redirect('cart')
 
-    return render(request, 'single-product.html', {'product': show_product})
+    return render(request, 'single-product.html', {'product': show_product, })
 
 
 def category(request):
@@ -122,8 +130,18 @@ def category_list(request, cat_name):
 
 
 def add_to_cart(request):
-    cart_object_get = Cart.objects.all()
-    return render(request, 'cart.html', {'cart': cart_object_get})
+
+    cart_items = Cart.objects.all()
+    subtotal = 0
+    price_per = 1
+
+    for price_item in cart_items:
+        price_per = price_item.total_price / price_item.quantity
+
+    for cart_item in cart_items:
+        subtotal += cart_item.total_price
+
+    return render(request, 'cart.html', {'cart_items': cart_items, 'subtotal': subtotal, 'price_per': price_per})
 
 
 def custom_password_change(request):
@@ -153,3 +171,15 @@ def custom_password_change(request):
             return render(request, 'change.html', {'message': "Old password is incorrect"})
 
     return render(request, 'change.html')
+
+
+def remove_product(request, cart_product_name):
+    if request.method == 'POST':
+        # Delete the cart item(s) with the specified cart_product_name
+        Cart.objects.filter(cart_id=cart_product_name).delete()
+
+        return redirect('cart')
+    
+def checkout(request):
+    
+    return render(request, 'checkout.html')
