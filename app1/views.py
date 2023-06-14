@@ -97,12 +97,11 @@ def single_product(request, pro_id):
         model.total_price = int(show_product.price) * \
             int(request.POST['quantity'])
         model.cart_product_name = show_product.pro_name
-        model.cart_img=show_product.img
-        
-        last_cart = Cart.objects.last() 
+        model.cart_img = show_product.img
+
+        last_cart = Cart.objects.last()
         last_cart_id = last_cart.cart_id if last_cart else 0
         model.cart_id = last_cart_id + 1
-
 
         print(model.cart_product_name)
         # model.cart_product_name = show_product.pro_name.value_from_object(show_product)
@@ -179,7 +178,45 @@ def remove_product(request, cart_product_name):
         Cart.objects.filter(cart_id=cart_product_name).delete()
 
         return redirect('cart')
+
+
+from django.http import HttpResponse
+from .models import order
+
+def check(request):
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        email = request.POST.get('email')
+        address = request.POST.get('address')
+        city = request.POST.get('city')
+        state = request.POST.get('state')
+        zip_code = request.POST.get('zip')
+        
+        print(name, address, city, state, zip_code)
+        
+        ship_address = order.objects.create(
+            name=name,
+            email=email,
+            address=address,
+            city=city,
+            zip=zip_code,
+            state=state,
+        )
+        
+        getCart = Cart.objects.all()
+
+        product_names = []  # List to store the cart_product_name values
+
+        for cart_item in getCart:
+            product_names.append(cart_item.cart_product_name)
+
+        # Join the product names into a string separated by commas
+        products_str = ', '.join(product_names)
+        ship_address.products = products_str  # Assign the joined string to the 'products' field
+        ship_address.save()
+
+    context = {
+        'products': ship_address.products,
+    }
+    return render(request, 'checkout.html', context)
     
-def checkout(request):
-    
-    return render(request, 'checkout.html')

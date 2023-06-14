@@ -30,8 +30,8 @@ urlpatterns = [
     path('login', login, name='login'),
     path('contact_us', contact_us, name='contact_us'),
     path('single/<int:pro_id>/', single_product, name='single_product'),
-    path('checkout', checkout, name='checkout'),
-    
+    path('checkout',check ,name='checkout'),
+
     path('category/', category, name='category'),
     path('category/<str:cat_name>/', category_list, name='category'),
     path('cart', add_to_cart, name='cart'),
