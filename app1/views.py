@@ -1,3 +1,6 @@
+from .models import Cart
+from django.shortcuts import render
+from .models import Order
 from django.contrib import messages
 from django.contrib.auth.forms import PasswordChangeForm
 from django.urls import reverse
@@ -180,10 +183,36 @@ def remove_product(request, cart_product_name):
         return redirect('cart')
 
 
-from django.http import HttpResponse
-from .models import order
+# def check(request):
+#     if request.method == 'POST':
+#         name = request.POST.get('name')
+#         email = request.POST.get('email')
+#         address = request.POST.get('address')
+#         city = request.POST.get('city')
+#         state = request.POST.get('state')
+#         zip_code = request.POST.get('zip')
+
+#         cart_entries = Cart.objects.all()
+#         for entry in cart_entries:
+#             shipping = order()
+#             shipping.email = email
+#             shipping.name = name
+#             shipping.address = address
+#             shipping.city = city
+#             shipping.state = state
+#             shipping.zip = zip_code
+#             shipping.products = entry.cart_product_name
+#             shipping.cart_price = entry.total_price
+#             shipping.save()
+
+#         # Retrieve the shipping entries after saving
+#         shipping_entries = order.objects.all()
+
+#     return render(request, 'checkout.html', {'shipping_entries': shipping_entries})
+
 
 def check(request):
+
     if request.method == 'POST':
         name = request.POST.get('name')
         email = request.POST.get('email')
@@ -191,32 +220,30 @@ def check(request):
         city = request.POST.get('city')
         state = request.POST.get('state')
         zip_code = request.POST.get('zip')
-        
-        print(name, address, city, state, zip_code)
-        
-        ship_address = order.objects.create(
-            name=name,
-            email=email,
-            address=address,
-            city=city,
-            zip=zip_code,
-            state=state,
-        )
-        
-        getCart = Cart.objects.all()
 
-        product_names = []  # List to store the cart_product_name values
+        cart_entries = Cart.objects.all()
+        for entry in cart_entries:
+            order = Order()
+            order.email = email
+            order.name = name
+            order.address = address
+            order.city = city
+            order.state = state
+            order.zip = zip_code
+            order.products = entry.cart_product_name
+            order.price = entry.total_price
 
-        for cart_item in getCart:
-            product_names.append(cart_item.cart_product_name)
+            order.save()
 
-        # Join the product names into a string separated by commas
-        products_str = ', '.join(product_names)
-        ship_address.products = products_str  # Assign the joined string to the 'products' field
-        ship_address.save()
+        # Retrieve the order entries after saving
+        order_entries = Order.objects.all()
 
-    context = {
-        'products': ship_address.products,
-    }
-    return render(request, 'checkout.html', context)
-    
+        return render(request, 'checkout.html', {'order_entries': order_entries, })
+
+    return render(request, 'checkout.html')
+
+
+def confirmations(request):
+    order = Order.objects.all()
+
+    return render(request, 'confirmation.html', {'order_entries': order})

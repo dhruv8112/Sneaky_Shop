@@ -67,7 +67,7 @@ class user_info(models.Model):
     password = models.CharField(max_length=40)
 
 
-class order(models.Model):
+class Order(models.Model):
         email=models.CharField(max_length=20)
         name=models.CharField(max_length=20)
         address = models.CharField(max_length=100)
@@ -75,6 +75,9 @@ class order(models.Model):
         state=models.CharField(max_length=20)
         zip=models.CharField(max_length=20)
         products=models.CharField(max_length=20,default="Null")
+        price=models.IntegerField(default=0)
+        
+
         
         
 

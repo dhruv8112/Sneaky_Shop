@@ -42,27 +42,13 @@
 			  <label>
 				<input type="checkbox" checked="checked" name="sameadr"> Shipping address same as billing
 			  </label>
-			  <input type="submit" value="Continue to checkout" class="btn">
-			</form>
-		  </div>
-		</div>
-	  
-		<div class="col-25">
-		  <div class="container">
-			<h4>Cart
-				{% for product in context %}
-			  <span class="price" style="color:black">
-				<i class="fa fa-shopping-cart"></i>
-				<b>4</b>
-			  </span>
-			</h4>
-			<p><a href="#">{{ product }}</a> <span class="price">$15</span></p>
+			  <!-- <input type="submit" value="Continue to checkout" class="btn"> -->
 			
-			<hr>
-			<p>Total <span class="price" style="color:black"><b>$30</b></span></p>
+			</form>
+			<button><a href="{% url 'confirmOrder' %}">Place order</a></button>
 		  </div>
-		  {% endfor %}
 		</div>
-	  </div>
+		
+		  
 </body>
 </html>
